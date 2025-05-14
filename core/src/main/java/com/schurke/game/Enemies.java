@@ -1,0 +1,24 @@
+package com.schurke.game;
+
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+
+public class Enemies {
+    private Vector2 position;
+    private static float size = 20f;
+
+    public Enemies(Vector2 position){
+        this.position = new Vector2(position);
+
+    }
+    public void render(ShapeRenderer shape){
+        shape.setColor(1,0,0,1);
+        shape.circle(position.x,position.y,size/2f);
+        shape.setColor(1,1,1,1);
+    }
+    public Vector2 getPosition(){
+        return position;
+    }
+
+
+}
