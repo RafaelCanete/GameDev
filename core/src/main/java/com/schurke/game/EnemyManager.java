@@ -27,6 +27,11 @@ public class EnemyManager {
     public ArrayList<Enemy> getEnemies() {
         return this.enemies;
     }
+    public void update(Vector2 position) {
+        for (Enemy enemy: enemies) {
+            enemy.update(position);
+        }
+    }
 
     private Enemy createEnemy(TileMap map){
         float margin = 30f;

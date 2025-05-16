@@ -41,6 +41,7 @@ public class Main extends ApplicationAdapter {
         player.render(shape);
         enemyManager.render(shape);
         player.update(map);
+        enemyManager.update(player.getPosition());
         shape.end();
 
         batch.setProjectionMatrix(camera.combined);
