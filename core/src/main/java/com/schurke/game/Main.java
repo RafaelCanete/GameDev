@@ -1,17 +1,11 @@
 package com.schurke.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -21,8 +15,7 @@ public class Main extends ApplicationAdapter {
     private ShapeRenderer shape;
     private Player player;
     private OrthographicCamera camera;
-    private List<Enemies> enemies;
-    private Random random;
+    private EnemyManager enemyManager;
 
     @Override
     public void create() {
@@ -33,11 +26,7 @@ public class Main extends ApplicationAdapter {
         player = new Player(map.getCenter());
         camera = new OrthographicCamera();
         camera.setToOrtho(false,1280,960);
-        random = new Random();
-        enemies = new ArrayList<>();
-        for (int i=0; i<5;i++){
-            enemies.add(spawnEnemy(map));
-        }
+        enemyManager = new EnemyManager(map, 10);
     }
 
     @Override
@@ -50,10 +39,7 @@ public class Main extends ApplicationAdapter {
 
         shape.begin(ShapeRenderer.ShapeType.Filled);
         player.render(shape);
-
-        for (Enemies enemy:enemies){
-            enemy.render(shape);
-        }
+        enemyManager.render(shape);
         player.update(map);
         shape.end();
 
@@ -61,9 +47,6 @@ public class Main extends ApplicationAdapter {
         shape.setProjectionMatrix(camera.combined);
         camera.position.set(player.getPosition().x, player.getPosition().y, 0);
         camera.update();
-
-
-
     }
 
     @Override
@@ -72,12 +55,6 @@ public class Main extends ApplicationAdapter {
         image.dispose();
         shape.dispose();
         map.dispose();
-    }
-    private Enemies spawnEnemy(TileMap map){
-        float margin = 30f;
-        float x = margin + random.nextFloat()*(map.getMapWidth()* map.getTileSize() -2 * margin);
-        float y = margin + random.nextFloat()*(map.getMapHeight()* map.getTileSize() -2 * margin);
-        return new Enemies(new Vector2(x,y));
     }
 }
 

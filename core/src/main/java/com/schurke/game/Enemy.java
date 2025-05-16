@@ -3,11 +3,11 @@ package com.schurke.game;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
-public class Enemies {
+public class Enemy {
     private Vector2 position;
     private static float size = 20f;
 
-    public Enemies(Vector2 position){
+    public Enemy(Vector2 position){
         this.position = new Vector2(position);
 
     }
