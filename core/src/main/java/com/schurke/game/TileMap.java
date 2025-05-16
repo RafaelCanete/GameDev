@@ -13,7 +13,9 @@ public class TileMap {
     private Texture grassTexture;
 
     public TileMap(){
-        grassTexture = new Texture(Gdx.files.internal("textures/grass.png"));
+        grassTexture = new Texture(Gdx.files.internal("textures/grass1.png"));
+        grassTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        grassTexture.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
     }
 
 public void render(SpriteBatch batch){
@@ -27,12 +29,21 @@ public Vector2 getCenter(){
         return new Vector2((mapWidth/2f)*tileSize,(mapHeight/2f)*tileSize);
     }
 
-public boolean isInsideMap(float x, float y){
-        return x>=0 && y>=0 && x < mapWidth * tileSize && y < mapHeight * tileSize;
+public boolean isInsideMap(float x, float y,float margin){
+        return x >= margin && y >= margin && x <= mapWidth *tileSize - margin && y <= mapHeight*tileSize - margin;
     }
 
     public void dispose() {
         grassTexture.dispose();
+    }
+    public int getTileSize(){
+        return tileSize;
+    }
+    public int getMapWidth(){
+        return mapWidth;
+    }
+    public  int getMapHeight(){
+        return mapHeight;
     }
 
 
