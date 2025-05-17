@@ -29,7 +29,7 @@ public class EnemyManager {
     }
     public void update(Vector2 position) {
         for (Enemy enemy: enemies) {
-            enemy.update(position);
+            enemy.update(enemies, position);
         }
     }
 
@@ -37,6 +37,6 @@ public class EnemyManager {
         float margin = 30f;
         float x = margin + random.nextFloat()*(map.getMapWidth()* map.getTileSize() -2 * margin);
         float y = margin + random.nextFloat()*(map.getMapHeight()* map.getTileSize() -2 * margin);
-        return new Enemy(new Vector2(x,y));
+        return new Enemy(new Vector2(x,y), 100f);
     }
 }
