@@ -37,15 +37,15 @@ public void render(SpriteBatch batch){
         grassTexture.dispose();
     }
 
+    public  int getMapHeight(){
+        return mapHeight;
+    }
+
     public int getTileSize() {
         return tileSize;
     }
 
     public int getMapWidth() {
         return mapWidth;
-    }
-
-    public  int getMapHeight() {
-        return mapHeight;
     }
 }
