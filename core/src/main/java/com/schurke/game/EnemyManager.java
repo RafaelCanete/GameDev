@@ -1,42 +1,37 @@
 package com.schurke.game;
 
+import com.badlogic.gdx.math.Vector2;
+
+
 import java.util.ArrayList;
 import java.util.Random;
-
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 
 public class EnemyManager {
     private ArrayList<Enemy> enemies;
     private Random random;
+    private TileMap map;
 
-    public EnemyManager(TileMap map, int count) {
-        this.enemies = new ArrayList<Enemy>();
+    public EnemyManager(TileMap map) {
+        this.map = map;
+        this.enemies = new ArrayList<>();
         this.random = new Random();
-        for(int i = 0; i < count; i++) {
-            enemies.add(this.createEnemy(map));
-        }
     }
 
-    public void render(ShapeRenderer renderer) {
-        for (Enemy enemy: enemies) {
-            enemy.render(renderer);
+    public void spawnEnemy (int count){
+        for (int i=0;i< count; i++){
+            float margin = 30f;
+            float x = margin + random.nextFloat()*(map.getMapWidth()* map.getTileSize() -2 * margin);
+            float y = margin + random.nextFloat()*(map.getMapHeight()* map.getTileSize() -2 * margin);
+            enemies.add(new Enemy(new Vector2(x,y), 100f, 1f, 20f));
         }
     }
 
     public ArrayList<Enemy> getEnemies() {
         return this.enemies;
     }
-    public void update(Vector2 position) {
+    public void update(Player player) {
         for (Enemy enemy: enemies) {
-            enemy.update(enemies, position);
+            enemy.update(enemies, player);
         }
-    }
-
-    private Enemy createEnemy(TileMap map){
-        float margin = 30f;
-        float x = margin + random.nextFloat()*(map.getMapWidth()* map.getTileSize() -2 * margin);
-        float y = margin + random.nextFloat()*(map.getMapHeight()* map.getTileSize() -2 * margin);
-        return new Enemy(new Vector2(x,y), 100f);
     }
 }
