@@ -1,5 +1,6 @@
 package com.schurke.game;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 
@@ -32,6 +33,11 @@ public class EnemyManager {
     public void update(Player player) {
         for (Enemy enemy: enemies) {
             enemy.update(enemies, player);
+        }
+    }
+    public void render(ShapeRenderer shape){
+        for (Enemy enemy:enemies){
+            enemy.render(shape);
         }
     }
 }
