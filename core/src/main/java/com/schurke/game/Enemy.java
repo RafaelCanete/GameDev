@@ -7,28 +7,51 @@ import com.badlogic.gdx.math.Vector2;
 public class Enemy {
     private Vector2 position;
     private static float size = 20f;
+    private float damageCooldown;
+    private float health;
+    private float attackDamage;
 
-    public Enemy(Vector2 position){
+    public Enemy(Vector2 position, float health, float damageCooldown, float attackDamage){
         this.position = new Vector2(position);
+        this.health = health;
+        this.damageCooldown = damageCooldown;
+        this.attackDamage = attackDamage;
     }
 
     public void render(ShapeRenderer shape){
-        shape.setColor(1,0,0,1);
-        shape.circle(position.x,position.y,size/2f);
-        shape.setColor(1,1,1,1);
+        if (position != null) {
+            shape.setColor(1, 0, 0, 1);
+            shape.rect(position.x, position.y, size, size);
+        }
     }
 
     public Vector2 getPosition(){
         return position;
     }
 
-    public void update(Vector2 playerPosition) {
+    public void update(Player player){
+        Vector2 playerPosition = player.getPosition();
         float speed = 100f;
-        Vector2 direction = new Vector2(playerPosition).sub(position);
+        float delta = Gdx.graphics.getDeltaTime();
+        damageCooldown -= delta;
+
+        if (this.position.dst(playerPosition)<20f){
+            if (damageCooldown <= 0f) {
+                player.takeDamage(this.attackDamage);
+                damageCooldown = 1.0f;
+            }
+            return;
+        }
+
+        Vector2 direction = new Vector2(playerPosition).sub(this.position);
+
         if (direction.len() > 1f) {
-            direction.nor();
-            direction.scl(speed * Gdx.graphics.getDeltaTime());
+            direction.nor().scl(speed* delta);
             position.add(direction);
         }
+    }
+
+    public boolean isDead(){
+        return health <= 0;
     }
 }
