@@ -33,16 +33,20 @@ public boolean isInsideMap(float x, float y,float margin){
         return x >= margin && y >= margin && x <= mapWidth *tileSize - margin && y <= mapHeight*tileSize - margin;
     }
 
-    public void dispose() {
+    public void dispose()
+    {
         grassTexture.dispose();
     }
-    public int getTileSize(){
+    public int getTileSize()
+    {
         return tileSize;
     }
-    public int getMapWidth(){
+    public int getMapWidth()
+    {
         return mapWidth;
     }
-    public  int getMapHeight(){
+    public  int getMapHeight()
+    {
         return mapHeight;
     }
 

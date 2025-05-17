@@ -2,16 +2,12 @@ package com.schurke.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -21,8 +17,7 @@ public class Main extends ApplicationAdapter {
     private ShapeRenderer shape;
     private Player player;
     private OrthographicCamera camera;
-    private List<Enemies> enemies;
-    private Random random;
+    private EnemyManager enemyManager;
 
     @Override
     public void create() {
@@ -33,16 +28,20 @@ public class Main extends ApplicationAdapter {
         player = new Player(map.getCenter());
         camera = new OrthographicCamera();
         camera.setToOrtho(false,1280,960);
-        random = new Random();
-        enemies = new ArrayList<>();
-        for (int i=0; i<5;i++){
-            enemies.add(spawnEnemy(map));
-        }
+        enemyManager = new EnemyManager(map);
+        enemyManager.spawnEnemy(5);
     }
 
     @Override
     public void render() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+
+        camera.position.set(player.getPosition().x, player.getPosition().y, 0);
+        camera.update();
+
+        batch.setProjectionMatrix(camera.combined);
+        shape.setProjectionMatrix(camera.combined);
+
         batch.begin();
         batch.draw(image, 140, 210);
         map.render(batch);
@@ -50,20 +49,20 @@ public class Main extends ApplicationAdapter {
 
         shape.begin(ShapeRenderer.ShapeType.Filled);
         player.render(shape);
-
-        for (Enemies enemy:enemies){
-            enemy.render(shape);
-        }
+        enemyManager.render(shape);
+        enemyManager.update(player);
         player.update(map);
         shape.end();
 
-        batch.setProjectionMatrix(camera.combined);
-        shape.setProjectionMatrix(camera.combined);
-        camera.position.set(player.getPosition().x, player.getPosition().y, 0);
-        camera.update();
+        if (player.isDead()){
+            System.out.println("Game Over! Player is dead!!");
+            return;
+        }
 
-
-
+        shape.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        healthBar();
+        shape.end();
     }
 
     @Override
@@ -73,11 +72,21 @@ public class Main extends ApplicationAdapter {
         shape.dispose();
         map.dispose();
     }
-    private Enemies spawnEnemy(TileMap map){
-        float margin = 30f;
-        float x = margin + random.nextFloat()*(map.getMapWidth()* map.getTileSize() -2 * margin);
-        float y = margin + random.nextFloat()*(map.getMapHeight()* map.getTileSize() -2 * margin);
-        return new Enemies(new Vector2(x,y));
+
+    private void healthBar(){
+        float maxHealth = 200;
+        float currentHealth = player.getHealth();
+        float width = 200f;
+        float height = 20f;
+        float x = 20f;
+        float y = Gdx.graphics.getHeight()-height-20f;
+        shape.setColor(0.3f,0.3f,0.3f,1f);
+        shape.rect(x,y,width,height);
+
+        shape.setColor(0f,1f,0f,1f);
+        shape.rect(x,y,(currentHealth/maxHealth)*width,height);
+
     }
+
 }
 
