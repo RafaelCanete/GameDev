@@ -16,6 +16,7 @@ public class Main extends ApplicationAdapter {
     private TileMap map;
     private ShapeRenderer shape;
     private Player player;
+    private HealthBar playerHealthBar;
     private OrthographicCamera camera;
     private EnemyManager enemyManager;
 
@@ -25,11 +26,12 @@ public class Main extends ApplicationAdapter {
         image = new Texture("libgdx.png");
         map = new TileMap();
         shape = new ShapeRenderer();
-        player = new Player(map.getCenter());
+        player = new Player(map.getCenter(), 100f, 30f);
         camera = new OrthographicCamera();
         camera.setToOrtho(false,1280,960);
         enemyManager = new EnemyManager(map);
         enemyManager.spawnEnemy(5);
+        playerHealthBar = new HealthBar(player, 20f);
     }
 
     @Override
@@ -56,12 +58,14 @@ public class Main extends ApplicationAdapter {
 
         if (player.isDead()){
             System.out.println("Game Over! Player is dead!!");
+            this.dispose();
+            Gdx.app.exit();
             return;
         }
 
         shape.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         shape.begin(ShapeRenderer.ShapeType.Filled);
-        healthBar();
+        playerHealthBar.render(shape);
         shape.end();
     }
 
@@ -72,21 +76,5 @@ public class Main extends ApplicationAdapter {
         shape.dispose();
         map.dispose();
     }
-
-    private void healthBar(){
-        float maxHealth = 200;
-        float currentHealth = player.getHealth();
-        float width = 200f;
-        float height = 20f;
-        float x = 20f;
-        float y = Gdx.graphics.getHeight()-height-20f;
-        shape.setColor(0.3f,0.3f,0.3f,1f);
-        shape.rect(x,y,width,height);
-
-        shape.setColor(0f,1f,0f,1f);
-        shape.rect(x,y,(currentHealth/maxHealth)*width,height);
-
-    }
-
 }
 

@@ -1,6 +1,5 @@
 package com.schurke.game;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
@@ -25,30 +24,28 @@ public void render(SpriteBatch batch){
             }
         }
     }
-public Vector2 getCenter(){
+
+    public Vector2 getCenter(){
         return new Vector2((mapWidth/2f)*tileSize,(mapHeight/2f)*tileSize);
     }
 
-public boolean isInsideMap(float x, float y,float margin){
+    public boolean isInsideMap(float x, float y,float margin){
         return x >= margin && y >= margin && x <= mapWidth *tileSize - margin && y <= mapHeight*tileSize - margin;
     }
 
-    public void dispose()
-    {
+    public void dispose() {
         grassTexture.dispose();
     }
-    public int getTileSize()
-    {
+
+    public int getTileSize() {
         return tileSize;
     }
-    public int getMapWidth()
-    {
+
+    public int getMapWidth() {
         return mapWidth;
     }
-    public  int getMapHeight()
-    {
+
+    public  int getMapHeight() {
         return mapHeight;
     }
-
-
 }

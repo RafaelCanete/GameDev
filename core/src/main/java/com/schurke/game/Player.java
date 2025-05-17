@@ -5,22 +5,25 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Player {
     private Vector2 position;
-    private static float size = 20f;
-    private int health = 200;
+    private float size;
+    private float health;
+    private float maxHealth;
 
-
-
-    public Player(Vector2 startPosition){
+    public Player(Vector2 startPosition, float health, float size){
         this.position = new Vector2(startPosition);
+        this.maxHealth = health;
+        this.health = health;
+        this.size = size;
     }
 
     public void render(ShapeRenderer shape){
-        shape.circle(position.x, position.y, size/2f);
+        shape.circle(this.position.x, this.position.y, this.size/2f);
     }
 
     public Vector2 getPosition() {
-        return new Vector2(position);
+        return this.position;
     }
+
     public void update(TileMap map) {
         // Bewegungsgeschwindigkeit in Einheiten pro Sekunde
         float speed = 200f;
@@ -54,23 +57,27 @@ public class Player {
     public void setPosition(float x, float y){
         this.position.set(x,y);
     }
+
     public float getSize(){
         return size;
     }
 
-    public void takeDamege(int amount){
+    public void takeDamage(float amount){
         health -= amount;
-        if (health <0){
-            health =0;
+        if (health < 0){
+            health = 0;
         }
     }
+
     public float getHealth(){
         return health;
     }
-    public boolean isDead(){
-        return health<=0;
+
+    public float getMaxHealth(){
+        return maxHealth;
     }
 
-
-
+    public boolean isDead(){
+        return health <= 0;
+    }
 }

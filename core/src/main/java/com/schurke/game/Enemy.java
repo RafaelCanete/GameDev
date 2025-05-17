@@ -7,49 +7,51 @@ import com.badlogic.gdx.math.Vector2;
 public class Enemy {
     private Vector2 position;
     private static float size = 20f;
-    public int health = 50;
-    private float damegeCooldown = 1.0f;
+    private float damageCooldown;
+    private float health;
+    private float attackDamage;
 
-    public Enemy(Vector2 position){
+    public Enemy(Vector2 position, float health, float damageCooldown, float attackDamage){
         this.position = new Vector2(position);
-
+        this.health = health;
+        this.damageCooldown = damageCooldown;
+        this.attackDamage = attackDamage;
     }
+
     public void render(ShapeRenderer shape){
         if (position != null) {
             shape.setColor(1, 0, 0, 1);
-            shape.circle(position.x, position.y, size / 2f);
+            shape.rect(position.x, position.y, size, size);
         }
     }
+
     public Vector2 getPosition(){
         return position;
     }
 
     public void update(Player player){
+        Vector2 playerPosition = player.getPosition();
         float speed = 100f;
         float delta = Gdx.graphics.getDeltaTime();
-        damegeCooldown -= delta;
+        damageCooldown -= delta;
 
-        if (position.dst(player.getPosition())<20f){
-            if (damegeCooldown <=0f) {
-                player.takeDamege(20);
-                damegeCooldown = 1.0f;
+        if (this.position.dst(playerPosition)<20f){
+            if (damageCooldown <= 0f) {
+                player.takeDamage(this.attackDamage);
+                damageCooldown = 1.0f;
             }
             return;
         }
 
-        Vector2 target = new Vector2(player.getPosition());
-        Vector2 direction = target.sub(position);
+        Vector2 direction = new Vector2(playerPosition).sub(this.position);
 
-        if (direction.len()>1f){
+        if (direction.len() > 1f) {
             direction.nor().scl(speed* delta);
             position.add(direction);
-
         }
     }
+
     public boolean isDead(){
-        return health<=0;
+        return health <= 0;
     }
-
-
-
 }
