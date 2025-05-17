@@ -26,11 +26,11 @@ public class Main extends ApplicationAdapter {
         image = new Texture("libgdx.png");
         map = new TileMap();
         shape = new ShapeRenderer();
-        player = new Player(map.getCenter(), 100f, 30f);
+        player = new Player(map.getCenter(), 100f, 25f);
         camera = new OrthographicCamera();
         camera.setToOrtho(false,1280,960);
         enemyManager = new EnemyManager(map);
-        enemyManager.spawnEnemy(5);
+        enemyManager.spawnEnemy(10);
         playerHealthBar = new HealthBar(player, 20f);
     }
 

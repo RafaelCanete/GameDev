@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class EnemyManager {
@@ -28,23 +27,17 @@ public class EnemyManager {
         }
     }
 
-    public void update(Player player){
-        for (Enemy enemy: enemies){
-            enemy.update(player);
+    public ArrayList<Enemy> getEnemies() {
+        return this.enemies;
+    }
+    public void update(Player player) {
+        for (Enemy enemy: enemies) {
+            enemy.update(enemies, player);
         }
     }
-
     public void render(ShapeRenderer shape){
         for (Enemy enemy:enemies){
             enemy.render(shape);
         }
-    }
-
-    public List<Enemy> getEnemies() {
-        return enemies;
-    }
-
-    public void clear(){
-        enemies.clear();
     }
 }
