@@ -34,35 +34,34 @@ public class Enemy {
     public void update(ArrayList<Enemy> allEnemies, Player player) {
         Vector2 playerPosition = player.getPosition();
         Vector2 toPlayer = new Vector2(playerPosition).sub(position).nor();
-        Vector2 separation = new Vector2();
-
         float speed = 100f;
         float delta = Gdx.graphics.getDeltaTime();
         damageCooldown -= delta;
+
+        Vector2 separation = new Vector2();
         float separationDistance = 25f;
         float separationStrength = 100f;
 
         for (Enemy other : allEnemies) {
             if (other == this) continue;
 
-            float distance = position.dst(other.position);
+            float distance = this.position.dst(other.position);
             if (distance < separationDistance && distance > 0.01f) {
                 Vector2 push = new Vector2(position).sub(other.position).nor().scl((separationDistance - distance) / separationDistance);
                 separation.add(push);
             }
         }
 
-        if (this.position.dst(playerPosition)<20f){
+        Vector2 finalVelocity = new Vector2(toPlayer).scl(speed).add(separation.scl(separationStrength));
+        position.add(finalVelocity.scl(delta));
+
+        if (this.position.dst(playerPosition) < 20f){
             if (damageCooldown <= 0f) {
                 player.takeDamage(this.attackDamage);
                 damageCooldown = 1.0f;
             }
             return;
         }
-
-        // Combine movement vectors
-        Vector2 finalVelocity = new Vector2(toPlayer).scl(speed).add(separation.scl(separationStrength));
-        position.add(finalVelocity.scl(Gdx.graphics.getDeltaTime()));
     }
 
     public boolean isDead(){
