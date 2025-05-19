@@ -46,7 +46,7 @@ public class Main extends ApplicationAdapter {
         enemyManager.spawnEnemy(10);
         playerHealthBar = new HealthBar(player, 20f);
         bullets = new ArrayList<>();
-        currentWeapon = new Shotgun();
+        currentWeapon = new Pistol();
 
     }
 
@@ -121,7 +121,7 @@ public class Main extends ApplicationAdapter {
     private void handleShooting(float delta) {
         shootCooldown -= delta;
 
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && shootCooldown <= 0f) {
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && shootCooldown <= 0f && currentWeapon.hasAmmo()) {
             Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(mousePos);
 

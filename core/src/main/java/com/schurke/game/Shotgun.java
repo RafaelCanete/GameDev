@@ -9,11 +9,17 @@ public class Shotgun implements Weapon {
     private final float cooldown = 0.6f;
     private final float damage = 20f;
     private final int pelletCount = 3;
+
+    private int ammo = 10; // Startmunition
+    private final int maxAmmo = 10;
     private final float spreadAngle = 20f; // in Grad, gesamt über alle Pellets verteilt
 
     @Override
     public List<Bullet> shoot(Vector2 position, Vector2 direction) {
         List<Bullet> bullets = new ArrayList<>();
+
+        if (ammo <= 0)
+            return bullets;
 
         // Mittelrichtung in Radiant
         float baseAngle = direction.angleRad();
@@ -32,5 +38,15 @@ public class Shotgun implements Weapon {
     @Override
     public float getCooldown() {
         return cooldown;
+    }
+
+    @Override
+    public boolean hasAmmo() {
+        return ammo > 0;
+    }
+
+    @Override
+    public int getAmmo() {
+        return ammo;
     }
 }
