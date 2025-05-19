@@ -10,8 +10,7 @@ public class Shotgun implements Weapon {
     private final float damage = 20f;
     private final int pelletCount = 3;
 
-    private int ammo = 10; // Startmunition
-    private final int maxAmmo = 10;
+    private int ammo = 10;
     private final float spreadAngle = 20f; // in Grad, gesamt über alle Pellets verteilt
 
     @Override
