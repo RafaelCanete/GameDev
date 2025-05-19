@@ -2,6 +2,7 @@ package com.schurke.game;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -30,6 +31,7 @@ public class Main extends ApplicationAdapter {
     private EnemyManager enemyManager;
     private ArrayList<Bullet> bullets;
     private float shootCooldown = 0f;
+    private Weapon currentWeapon;
 
     @Override
     public void create() {
@@ -44,6 +46,7 @@ public class Main extends ApplicationAdapter {
         enemyManager.spawnEnemy(10);
         playerHealthBar = new HealthBar(player, 20f);
         bullets = new ArrayList<>();
+        currentWeapon = new Shotgun();
 
     }
 
@@ -124,8 +127,10 @@ public class Main extends ApplicationAdapter {
 
             Vector2 shootDir = new Vector2(mousePos.x, mousePos.y).sub(player.getPosition()).nor();
 
-            bullets.add(new Bullet(player.getPosition(), shootDir));
-            shootCooldown = 0.3f;
+            List<Bullet> newBullets = currentWeapon.shoot(player.getPosition(), shootDir);
+            bullets.addAll(newBullets);
+
+            shootCooldown = currentWeapon.getCooldown();
         }
     }
 
