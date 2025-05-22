@@ -1,11 +1,10 @@
 package com.schurke.game;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
-
-
 import java.util.ArrayList;
 import java.util.Random;
+
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 
 public class EnemyManager {
     private ArrayList<Enemy> enemies;
@@ -18,25 +17,28 @@ public class EnemyManager {
         this.random = new Random();
     }
 
-    public void spawnEnemy (int count){
-        for (int i=0;i< count; i++){
+    public void spawnEnemy(int count) {
+        for (int i = 0; i < count; i++) {
             float margin = 30f;
-            float x = margin + random.nextFloat()*(map.getMapWidth()* map.getTileSize() -2 * margin);
-            float y = margin + random.nextFloat()*(map.getMapHeight()* map.getTileSize() -2 * margin);
-            enemies.add(new Enemy(new Vector2(x,y), 100f, 1f, 20f));
+            float x = margin + random.nextFloat() * (map.getMapWidth() * map.getTileSize() - 2 * margin);
+            float y = margin + random.nextFloat() * (map.getMapHeight() * map.getTileSize() - 2 * margin);
+            enemies.add(new Enemy(new Vector2(x, y), 100f, 1f, 20f));
         }
     }
 
     public ArrayList<Enemy> getEnemies() {
         return this.enemies;
     }
+
     public void update(Player player) {
-        for (Enemy enemy: enemies) {
+        for (Enemy enemy : enemies) {
             enemy.update(enemies, player);
         }
+        enemies.removeIf(Enemy::isDead);
     }
-    public void render(ShapeRenderer shape){
-        for (Enemy enemy:enemies){
+
+    public void render(ShapeRenderer shape) {
+        for (Enemy enemy : enemies) {
             enemy.render(shape);
         }
     }
