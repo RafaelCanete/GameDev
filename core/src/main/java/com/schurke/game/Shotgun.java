@@ -9,18 +9,18 @@ public class Shotgun implements Weapon {
     private final float cooldown = 0.6f;
     private final float damage = 20f;
     private final int pelletCount = 3;
+    private final float spreadAngle = 20f;
 
-    private int ammo = 100;
-    private final float spreadAngle = 20f; // in Grad, gesamt über alle Pellets verteilt
+    private final int magazineSize = 2;
+    private int currentAmmo = magazineSize;
+    private int reserveAmmo = 30;
 
     @Override
     public List<Bullet> shoot(Vector2 position, Vector2 direction) {
         List<Bullet> bullets = new ArrayList<>();
 
-        if (ammo <= 0)
-            return bullets;
+        if (!hasAmmo()) return bullets;
 
-        // Mittelrichtung in Radiant
         float baseAngle = direction.angleRad();
         float startAngle = baseAngle - (float) Math.toRadians(spreadAngle / 2f);
         float angleStep = (float) Math.toRadians(spreadAngle / (pelletCount - 1));
@@ -31,21 +31,45 @@ public class Shotgun implements Weapon {
             bullets.add(new Bullet(position, dir, damage));
         }
 
+        currentAmmo--;
         return bullets;
+    }
+
+    @Override
+    public boolean hasAmmo() {
+        return GameConfig.isUnlimitedAmmo() || currentAmmo > 0;
+    }
+
+    @Override
+    public int getAmmo() {
+        return GameConfig.isUnlimitedAmmo() ? -1 : currentAmmo;
+    }
+
+    @Override
+    public int getCurrentAmmo() {
+        return GameConfig.isUnlimitedAmmo() ? -1 : currentAmmo;
+    }
+
+    @Override
+    public int getReserveAmmo() {
+        return GameConfig.isUnlimitedAmmo() ? -1 : reserveAmmo;
+    }
+
+    @Override
+    public void reload() {
+        if (GameConfig.isUnlimitedAmmo()) {
+            currentAmmo = magazineSize;
+            return;
+        }
+
+        int missing = magazineSize - currentAmmo;
+        int toReload = Math.min(missing, reserveAmmo);
+        currentAmmo += toReload;
+        reserveAmmo -= toReload;
     }
 
     @Override
     public float getCooldown() {
         return cooldown;
-    }
-
-    @Override
-    public boolean hasAmmo() {
-        return ammo > 0;
-    }
-
-    @Override
-    public int getAmmo() {
-        return ammo;
     }
 }

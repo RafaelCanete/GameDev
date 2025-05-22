@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
@@ -32,6 +33,8 @@ public class Main extends ApplicationAdapter {
     private ArrayList<Bullet> bullets;
     private float shootCooldown = 0f;
     private Weapon currentWeapon;
+    private BitmapFont font;
+    private SpriteBatch hudBatch;
 
     @Override
     public void create() {
@@ -45,6 +48,8 @@ public class Main extends ApplicationAdapter {
         enemyManager = new EnemyManager(map);
         enemyManager.spawnEnemy(10);
         playerHealthBar = new HealthBar(player, 20f);
+        font = new BitmapFont();
+        hudBatch = new SpriteBatch();
         bullets = new ArrayList<>();
         currentWeapon = new Shotgun();
 
@@ -79,6 +84,9 @@ public class Main extends ApplicationAdapter {
         float delta = Gdx.graphics.getDeltaTime();
         handleShooting(delta);
 
+        //Reloading
+        handleReloading();
+
         // Bullets updaten
         updateAndRenderBullets(delta);
 
@@ -94,6 +102,19 @@ public class Main extends ApplicationAdapter {
         shape.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         shape.begin(ShapeRenderer.ShapeType.Filled);
         playerHealthBar.render(shape);
+
+        hudBatch.begin();
+
+        if (GameConfig.isUnlimitedAmmo()) {
+            font.draw(hudBatch, "Ammo: ∞", 20, 40);
+        } else {
+            int current = currentWeapon.getCurrentAmmo();
+            int reserve = currentWeapon.getReserveAmmo();
+            font.draw(hudBatch, "Ammo: " + current + "/" + reserve, 20, 40);
+        }
+
+        hudBatch.end();
+
         shape.end();
     }
 
@@ -134,6 +155,13 @@ public class Main extends ApplicationAdapter {
         }
     }
 
+    private void handleReloading() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R) || !currentWeapon.hasAmmo()) {
+            currentWeapon.reload();
+        }
+
+    }
+
     private void updateAndRenderBullets(float delta) {
         Iterator<Bullet> bulletIterator = bullets.iterator();
         while (bulletIterator.hasNext()) {
@@ -159,5 +187,7 @@ public class Main extends ApplicationAdapter {
         image.dispose();
         shape.dispose();
         map.dispose();
+        font.dispose();
+        hudBatch.dispose();
     }
 }

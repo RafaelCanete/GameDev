@@ -12,4 +12,11 @@ public interface Weapon {
     boolean hasAmmo();
 
     int getAmmo();
+
+    int getCurrentAmmo();
+
+    int getReserveAmmo();
+
+    void reload();
+
 }
