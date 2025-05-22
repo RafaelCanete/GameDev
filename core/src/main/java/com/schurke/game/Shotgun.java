@@ -35,10 +35,14 @@ public class Shotgun implements Weapon {
         float startAngle = baseAngle - (float) Math.toRadians(spreadAngle / 2f);
         float angleStep = (float) Math.toRadians(spreadAngle / (pelletCount - 1));
 
+        float speed = 700f;
+        float size = 5f;
+        float lifetime = 2f;
+
         for (int i = 0; i < pelletCount; i++) {
             float angle = startAngle + i * angleStep;
             Vector2 dir = new Vector2((float) Math.cos(angle), (float) Math.sin(angle)).nor();
-            bullets.add(new Bullet(position, dir, damage));
+            bullets.add(new Bullet(position, dir, speed, damage, size, lifetime));
         }
 
         currentAmmo--;

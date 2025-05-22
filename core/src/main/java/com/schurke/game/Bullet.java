@@ -6,16 +6,17 @@ import com.badlogic.gdx.math.Vector2;
 public class Bullet {
     private Vector2 position;
     private Vector2 velocity;
-    private float lifetime = 2f;
     private float damage;
+    private float size;
+    private float lifetime;
+    private float speed;
 
-    private static final float SPEED = 400f;
-    private static final float SIZE = 5f;
-
-    public Bullet(Vector2 position, Vector2 direction, float damage) {
+    public Bullet(Vector2 position, Vector2 direction, float speed, float damage, float size, float lifetime) {
         this.position = new Vector2(position);
-        this.velocity = new Vector2(direction).nor().scl(SPEED);
+        this.velocity = new Vector2(direction).nor().scl(speed);
         this.damage = damage;
+        this.size = size;
+        this.lifetime = lifetime;
     }
 
     public void update(float delta) {
@@ -25,7 +26,7 @@ public class Bullet {
 
     public void render(ShapeRenderer shape) {
         shape.setColor(1f, 1f, 0f, 1f);
-        shape.circle(position.x, position.y, SIZE);
+        shape.circle(position.x, position.y, size);
     }
 
     public boolean collidesWith(Enemy enemy) {

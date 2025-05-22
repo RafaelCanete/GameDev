@@ -23,7 +23,7 @@ public class BulletManager {
 
             for (Enemy enemy : enemyManager.getEnemies()) {
                 if (bullet.collidesWith(enemy)) {
-                    enemy.takeDamage(50f);
+                    enemy.takeDamage(bullet.getDamage());
                     bulletIterator.remove();
                     break;
                 }

@@ -28,7 +28,11 @@ public class Pistol implements Weapon {
         if (!hasAmmo())
             return bullets;
 
-        bullets.add(new Bullet(position, direction, damage));
+        float speed = 800f;
+        float size = 5f;
+        float lifetime = 2f;
+
+        bullets.add(new Bullet(position, direction, speed, damage, size, lifetime));
         currentAmmo--;
         shootSound.play();
         return bullets;

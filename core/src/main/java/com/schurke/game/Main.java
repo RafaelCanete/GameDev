@@ -48,7 +48,7 @@ public class Main extends ApplicationAdapter {
         font = new BitmapFont();
         hudBatch = new SpriteBatch();
         bullets = new ArrayList<>();
-        currentWeapon = new Shotgun();
+        currentWeapon = new Pistol();
         combatController = new CombatController(player, currentWeapon, camera, bullets);
         bulletManager = new BulletManager(bullets, enemyManager);
         aimRenderer = new AimRenderer(camera, player);
