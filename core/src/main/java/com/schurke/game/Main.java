@@ -46,7 +46,7 @@ public class Main extends ApplicationAdapter {
         enemyManager.spawnEnemy(10);
         playerHealthBar = new HealthBar(player, 20f);
         bullets = new ArrayList<>();
-        currentWeapon = new Pistol();
+        currentWeapon = new Shotgun();
 
     }
 

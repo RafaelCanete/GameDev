@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Pistol implements Weapon {
     private final float cooldown = 0.3f;
     private final float damage = 50f;
-    private int ammo = 10;
+    private int ammo = 100;
 
     @Override
     public List<Bullet> shoot(Vector2 position, Vector2 direction) {
