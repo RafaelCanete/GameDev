@@ -3,9 +3,18 @@ package com.schurke.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 
 public class Shotgun implements Weapon {
+    private final Sound shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/shotgun/shoot.wav"));
+    private final Sound reloadSound = Gdx.audio.newSound(Gdx.files.internal("sounds/shotgun/reload.wav"));
+
+    private boolean isReloading = false;
+    private float reloadTimer = 0f;
+    private final float reloadDuration = 1.0f;
+
     private final float cooldown = 0.6f;
     private final float damage = 20f;
     private final int pelletCount = 3;
@@ -19,7 +28,8 @@ public class Shotgun implements Weapon {
     public List<Bullet> shoot(Vector2 position, Vector2 direction) {
         List<Bullet> bullets = new ArrayList<>();
 
-        if (!hasAmmo()) return bullets;
+        if (!hasAmmo())
+            return bullets;
 
         float baseAngle = direction.angleRad();
         float startAngle = baseAngle - (float) Math.toRadians(spreadAngle / 2f);
@@ -32,6 +42,7 @@ public class Shotgun implements Weapon {
         }
 
         currentAmmo--;
+        shootSound.play();
         return bullets;
     }
 
@@ -62,14 +73,43 @@ public class Shotgun implements Weapon {
             return;
         }
 
-        int missing = magazineSize - currentAmmo;
-        int toReload = Math.min(missing, reserveAmmo);
-        currentAmmo += toReload;
-        reserveAmmo -= toReload;
+        if (isReloading || currentAmmo == magazineSize || reserveAmmo == 0)
+            return;
+
+        isReloading = true;
+        reloadTimer = reloadDuration;
+        reloadSound.play();
     }
 
     @Override
     public float getCooldown() {
         return cooldown;
     }
+
+    @Override
+    public void dispose() {
+        shootSound.dispose();
+        reloadSound.dispose();
+    }
+
+    @Override
+    public void update(float delta) {
+        if (isReloading) {
+            reloadTimer -= delta;
+            if (reloadTimer <= 0f) {
+                isReloading = false;
+
+                int missing = magazineSize - currentAmmo;
+                int toReload = Math.min(missing, reserveAmmo);
+                currentAmmo += toReload;
+                reserveAmmo -= toReload;
+            }
+        }
+    }
+
+    @Override
+    public boolean isReloading() {
+        return isReloading;
+    }
+
 }

@@ -3,9 +3,18 @@ package com.schurke.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 
 public class Pistol implements Weapon {
+    private final Sound shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pistol/shoot.wav"));
+    private final Sound reloadSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pistol/reload.wav"));
+
+    private boolean isReloading = false;
+    private float reloadTimer = 0f;
+    private final float reloadDuration = 4.0f;
+
     private final float cooldown = 0.3f;
     private final float damage = 50f;
     private final int magazineSize = 10;
@@ -21,6 +30,7 @@ public class Pistol implements Weapon {
 
         bullets.add(new Bullet(position, direction, damage));
         currentAmmo--;
+        shootSound.play();
         return bullets;
     }
 
@@ -46,10 +56,12 @@ public class Pistol implements Weapon {
             return;
         }
 
-        int missing = magazineSize - currentAmmo;
-        int toReload = Math.min(missing, reserveAmmo);
-        currentAmmo += toReload;
-        reserveAmmo -= toReload;
+        if (isReloading || currentAmmo == magazineSize || reserveAmmo == 0)
+            return;
+
+        isReloading = true;
+        reloadTimer = reloadDuration;
+        reloadSound.play();
     }
 
     @Override
@@ -60,5 +72,31 @@ public class Pistol implements Weapon {
     @Override
     public int getReserveAmmo() {
         return GameConfig.isUnlimitedAmmo() ? -1 : reserveAmmo;
+    }
+
+    @Override
+    public void dispose() {
+        shootSound.dispose();
+        reloadSound.dispose();
+    }
+
+    @Override
+    public void update(float delta) {
+        if (isReloading) {
+            reloadTimer -= delta;
+            if (reloadTimer <= 0f) {
+                isReloading = false;
+
+                int missing = magazineSize - currentAmmo;
+                int toReload = Math.min(missing, reserveAmmo);
+                currentAmmo += toReload;
+                reserveAmmo -= toReload;
+            }
+        }
+    }
+
+    @Override
+    public boolean isReloading() {
+        return isReloading;
     }
 }

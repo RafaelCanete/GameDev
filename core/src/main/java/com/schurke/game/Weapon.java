@@ -19,4 +19,10 @@ public interface Weapon {
 
     void reload();
 
+    void dispose();
+
+    void update(float delta);
+
+    boolean isReloading();
+
 }

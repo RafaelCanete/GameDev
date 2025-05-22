@@ -82,9 +82,12 @@ public class Main extends ApplicationAdapter {
 
         // Schießen
         float delta = Gdx.graphics.getDeltaTime();
+
+        currentWeapon.update(delta);
+
         handleShooting(delta);
 
-        //Reloading
+        // Reloading
         handleReloading();
 
         // Bullets updaten
@@ -111,6 +114,10 @@ public class Main extends ApplicationAdapter {
             int current = currentWeapon.getCurrentAmmo();
             int reserve = currentWeapon.getReserveAmmo();
             font.draw(hudBatch, "Ammo: " + current + "/" + reserve, 20, 40);
+        }
+
+        if (currentWeapon.isReloading()) {
+            font.draw(hudBatch, "Reloading...", 20, 70);
         }
 
         hudBatch.end();
@@ -140,6 +147,9 @@ public class Main extends ApplicationAdapter {
     }
 
     private void handleShooting(float delta) {
+        if (currentWeapon.isReloading())
+            return;
+
         shootCooldown -= delta;
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && shootCooldown <= 0f && currentWeapon.hasAmmo()) {
@@ -189,5 +199,6 @@ public class Main extends ApplicationAdapter {
         map.dispose();
         font.dispose();
         hudBatch.dispose();
+        currentWeapon.dispose();
     }
 }
